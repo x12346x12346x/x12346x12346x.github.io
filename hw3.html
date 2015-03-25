@@ -1,0 +1,218 @@
+<html>
+    <head>
+    <meta charset="utf-8">
+    <title>Homework 2</title>
+    <script>
+        var card;
+        var deck=[];
+        var ind=["/hw3Source/1.png","/hw3Source/2.png","/hw3Source/3.png","/hw3Source/4.png","/hw3Source/5.png","/hw3Source/6.png","/hw3Source/7.png","/hw3Source/8.png"];
+        var gameStart;
+        var timer;
+        var delaytimer;
+        var firstflip=-1;
+        var firstindex=-1;
+        var secondflip=-1;
+        var secondindex=-1;
+        var gameEnd=0;
+        var delay=0;
+        function Card(info){
+            this.info=info
+            this.flipped=0;
+        }
+        function Deck(row,col){
+            var i;
+            var card_info=0;
+            var card;
+            for(i=0;i<row*col;i++){
+                card=new Card(card_info);
+                deck.push(card);
+                if(i%2==1)
+                    card_info++;
+            }
+            
+        }
+        function Shuffle(){
+            
+            var i,j;
+            var temp;
+            var deck_length = deck.length; 
+            var k;
+            for(k=0;k<2*deck_length;k++){
+                i=Math.floor(Math.random()*deck_length);
+                j=Math.floor(Math.random()*deck_length);
+                temp=deck[i];
+                deck[i]=deck[j];
+                deck[j]=temp;
+            }
+        }
+        function Reset(){
+            input=document.getElementById("time");
+            input.value=0;
+            clearTimeout(timer);
+            button=document.getElementById("start");
+            button.value="Game Start";
+            deck.splice(0,deck.length);
+            Deck(4,4);
+            Shuffle();
+            var i;
+            var deck_length = deck.length;
+            for(i=0;i<deck_length;i++){
+                document.getElementById(i).src="hw3Source/cardback.png";
+            }
+        }
+        function TimerStart(){
+            input=document.getElementById("time");
+            input.value++;
+            timer=setTimeout("TimerStart()",1000);
+        }
+        function Timer(){
+            button=document.getElementById("start");
+            switch(button.value){
+                case "Game Start":
+                    gameStart=1;
+                    TimerStart();
+                    button.value="Stop Game";
+                    break;
+                case "Continue":
+                    gameStart=1;
+                    TimerStart();
+                    button.value="Stop Game";
+                    break;
+                case "Stop Game":
+                    gameStart=0;
+                    clearTimeout(timer);
+                    button.value="Continue";
+                    break;
+                case "Game End":
+                    gameStart=0;
+                    clearTimeout(timer);
+                    break;
+            }
+        }
+        function Choose(index){
+            if(gameStart==1){
+                if(firstflip<0){
+                    firstflip=deck[index].info;
+                    deck[index].flipped=1;
+                    document.getElementById(index).src="hw3Source/"+deck[index].info+".png";
+                    firstindex=index;
+                    return;
+                }
+                else if(secondflip<0){
+                    secondflip=deck[index].info;
+                    deck[index].flipped=1;
+                    document.getElementById(index).src="hw3Source/"+deck[index].info+".png";
+                    secondindex=index;
+                }
+                if(firstflip==secondflip){
+                    gameEnd++;
+                    firstflip=-1;
+                    secondflip=-1;
+                    firstindex=-1;
+                    secondindex=-1;
+                    if(gameEnd==deck.length/2){
+                        alert("Congratulations!!");
+                        button.value="Game End";
+                        Timer();
+                        firstflip=-1;
+                        secondflip=-1;
+                        firstindex=-1;
+                        secondindex=-1;
+                        gameEnd=0;
+                        return;
+                    }
+                    return;
+                }
+                else{
+                    CardReset();
+                    return;
+                }
+            }
+        }
+        function CardReset(){
+            delay++;
+            if(delay==10){
+                deck[firstindex].flipped=0;
+                deck[secondindex].flipped=0;
+                document.getElementById(firstindex).src="hw3Source/cardback.png";
+                document.getElementById(secondindex).src="hw3Source/cardback.png";
+                firstflip=-1;
+                secondflip=-1;
+                firstindex=-1;
+                secondindex=-1;
+                delay=0;
+                return;
+            }
+            delaytimer=setTimeout("CardReset()",100);
+        }
+    </script>
+    </head>
+    <body onload="Reset()">
+        <p align="center"><font size="5">FF Card Fliping</font></p>
+        <p align="center">
+            <input type="button" id="start" value="Game Start" onClick="Timer()">
+            <input type="button" id="reset" value="Reset Game" onClick="Reset()">
+            <input type="text" id="time" value="0">
+        </p>
+        <table align="center">
+            <tbody>
+            <tr>
+                <td>
+                    <img src="hw3Source/cardback.png" width="90" height="90" id="0" onClick="Choose(0)">
+                </td>
+                <td>
+                    <img src="hw3Source/cardback.png" width="90" height="90" id="1" onClick="Choose(1)">
+                </td>
+                <td>
+                    <img src="hw3Source/cardback.png" width="90" height="90" id="2" onClick="Choose(2)">
+                </td>
+                <td>
+                    <img src="hw3Source/cardback.png" width="90" height="90" id="3" onClick="Choose(3)">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <img src="hw3Source/cardback.png" width="90" height="90" id="4" onClick="Choose(4)">
+                </td>
+                <td>
+                    <img src="hw3Source/cardback.png" width="90" height="90" id="5" onClick="Choose(5)">
+                </td>
+                <td>
+                    <img src="hw3Source/cardback.png" width="90" height="90" id="6" onClick="Choose(6)">
+                </td>
+                <td>
+                    <img src="hw3Source/cardback.png" width="90" height="90" id="7" onClick="Choose(7)">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <img src="hw3Source/cardback.png" width="90" height="90" id="8" onClick="Choose(8)">
+                </td>
+                <td>
+                    <img src="hw3Source/cardback.png" width="90" height="90" id="9" onClick="Choose(9)">
+                </td>
+                <td>
+                    <img src="hw3Source/cardback.png" width="90" height="90" id="10" onClick="Choose(10)">
+                </td>
+                <td>
+                    <img src="hw3Source/cardback.png" width="90" height="90" id="11" onClick="Choose(11)">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <img src="hw3Source/cardback.png" width="90" height="90" id="12" onClick="Choose(12)">
+                </td>
+                <td>
+                    <img src="hw3Source/cardback.png" width="90" height="90" id="13" onClick="Choose(13)">
+                </td>
+                <td>
+                    <img src="hw3Source/cardback.png" width="90" height="90" id="14" onClick="Choose(14)">
+                </td>
+                <td>
+                    <img src="hw3Source/cardback.png" width="90" height="90" id="15" onClick="Choose(15)">
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </body>
+</html>
