@@ -1,0 +1,91 @@
+<html>
+<head>
+    <meta charset="UTF-8" />
+</head>
+<body bgcolor="#ccccff">
+ 
+<canvas width="500" height="500" id="myCanvas" style="border:1px solid;position:absolute;top:100;left:100;"></canvas>
+<input type="button" id="straightline" value="直線">
+線粗:<input type="text" id="rough" value="1">
+顏色:<input type="color" id="color">
+<input type="button" id="eraser" value="橡皮擦">
+橡皮擦寬度:<input type="text" id="erough" value="1"><br/>
+<input type="button" id="anyline" value="任意線">
+<input type="button" id="word" value="文字">
+文字大小:<input type="text" id="big" value="1">
+<input type="text" id="text" value="請輸入內容">
+<script>
+var canvas = document.getElementById("myCanvas"); // 取得物件
+var ctx = canvas.getContext("2d"); // 取得繪圖環境
+var mode = '', drawMode = false, oriX, oriY, mx, my, offsetX, offsetY, dist;
+var oldImg, shapes = [], color;
+ 
+document.getElementById('straightline').onclick = function(){mode='straightline'};
+document.getElementById('eraser').onclick = function(){mode='eraser'};
+document.getElementById('anyline').onclick=function(){mode='anyline'};
+document.getElementById('word').onclick=function(){mode='word'};
+ 
+canvas.onmousedown = function(ev){
+    if(mode=='straightline'){
+        ctx.beginPath();
+        ctx.strokeStyle = document.getElementById("color").value;
+        ctx.lineWidth = document.getElementById("rough").value;
+        mx = event.clientX - parseInt(canvas.style.left) + window.pageXOffset;
+        my = event.clientY - parseInt(canvas.style.top) + window.pageYOffset;
+        ctx.moveTo(mx, my);
+        drawMode = true;
+    }
+    else if(mode=='eraser'){
+        ctx.beginPath();
+        ctx.strokeStyle = "#ccccff";
+        ctx.lineWidth = document.getElementById("erough").value;
+        mx = event.clientX - parseInt(canvas.style.left) + window.pageXOffset;
+        my = event.clientY - parseInt(canvas.style.top) + window.pageYOffset;
+        ctx.moveTo(mx, my);
+        drawMode = true;
+    }
+    else if(mode=='anyline'){
+        ctx.beginPath();
+        ctx.strokeStyle = document.getElementById("color").value;
+        ctx.lineWidth = document.getElementById("rough").value;
+        mx = event.clientX - parseInt(canvas.style.left) + window.pageXOffset;
+        my = event.clientY - parseInt(canvas.style.top) + window.pageYOffset;
+        ctx.moveTo(mx, my);
+        drawMode = true; 
+    }
+    else if(mode=='word'){
+        mx = event.clientX - parseInt(canvas.style.left) + window.pageXOffset;
+        my = event.clientY - parseInt(canvas.style.top) + window.pageYOffset;
+        ctx.fillStyle = document.getElementById("color").value;
+        ctx.font =  document.getElementById("big").value+'px 新細明體';
+        ctx.textAlign = 'center';
+        ctx.fillText(document.getElementById("text").value,mx,my);
+    }
+}
+canvas.onmousemove = function(ev){
+    if(mode=='eraser'){
+        mx = event.clientX - parseInt(canvas.style.left) + window.pageXOffset;
+        my = event.clientY - parseInt(canvas.style.top) + window.pageYOffset;
+        ctx.lineTo(mx, my);
+        ctx.stroke();
+    }
+    if(drawMode==true&&mode=='anyline'){
+        mx = event.clientX - parseInt(canvas.style.left) + window.pageXOffset;
+        my = event.clientY - parseInt(canvas.style.top) + window.pageYOffset;
+        ctx.lineTo(mx,my);
+        ctx.stroke();
+    }
+}
+canvas.onmouseup = function(){
+    if(drawMode==true&&mode=='straightline'){
+        mx = event.clientX - parseInt(canvas.style.left) + window.pageXOffset;
+        my = event.clientY - parseInt(canvas.style.top) + window.pageYOffset;
+        ctx.lineTo(mx,my);
+        ctx.stroke();
+    }
+    //mode = '';
+    drawMode = false;
+}
+</script>
+ 
+</body></html>
