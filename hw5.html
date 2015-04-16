@@ -1,0 +1,86 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
+   <script type="text/javascript" src="jquery-1.11.2.min.js"></script>
+
+     
+    <script type="text/javascript">
+        var jsonData;
+        var mode;
+        
+        var markers = [];
+        var iterator = 0;
+        var map;
+      
+       
+        function initialize() {
+            geocoder = new google.maps.Geocoder();
+            var mapOptions = {
+                center: new google.maps.LatLng(24.8, 120.97),
+                zoom: 7,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+            map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
+            
+        }
+        function parseJson(){
+            for(var i=0;i<jsonData.length;i++){
+                codeAddress(jsonData[i]['地址']);
+            }
+            
+
+             map_canvas.style.display="block";
+            
+        }
+         function codeAddress(addres){
+            var address=addres;
+            geocoder.geocode(
+                {'address': address} ,
+                function(results, status){ /* 查詢完成時執行的函式 */
+                    if(status == google.maps.GeocoderStatus.OK) {
+                        map.setCenter(results[0].geometry.location);
+                        map.setZoom(10);
+                        var marker = new google.maps.Marker({
+                            map: map,
+                            position: results[0].geometry.location
+                        });
+                    }
+                    else {
+                        
+                        sleep(2000);
+                        codeAddress(addres);
+                        //alert(address);
+                        // alert('Geocode was not successful for the following reason: ' + status);
+                    }
+                }
+            );
+        }
+        function sleep(delay) {
+            
+            var start = new Date().getTime();
+            while (new Date().getTime() < start + delay);
+        }
+          function mode_select(value){
+            initialize();
+            map_canvas.style.display="none";
+            mode=value;
+            $.getJSON(mode,function(data){
+                jsonData=data;
+            });
+            setTimeout("parseJson()",1000);
+
+        }
+    </script>
+</head>
+<body onload="initialize()">
+<div id="map_canvas" style="width:800px; height:600px;border-radius:25px">
+</div>
+<input type="button" value="動物醫院分布" onclick="mode_select('hospital.json')">
+<input type="button" value="動物商家分布"  onclick="mode_select('shop.json')">
+<input type="button" value="動物登記所分布" onclick="mode_select('login.json')">
+
+</body></html>
