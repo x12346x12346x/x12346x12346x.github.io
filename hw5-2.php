@@ -1,11 +1,11 @@
 <html>
      <?php $input=$_POST['count'];
-                if($input!=""){           
+                if(preg_match("/^([0-9\+\-\*\/\(\)]*)$/" ,$input) && $input!=""){
                     $res =@eval("return ($input);");
-                if($res==NULL)
+                if($res!=0 && $res==NULL)
                     $res='ERROR';
-                echo $res;
-                            }
+                }
+                else $res='';
                     ?>
     <head>
         <title>Homework 5-2</title>
@@ -23,7 +23,7 @@
         }
     </script>
     <body>
-        <input type="text" id="result" value="" style="width:150px"><input type="text" id="result0" value="<?php echo $res; ?>" style="width:150px"><br/>
+        <input type="text" id="result" value="" style="width:150px"><input type="text" id="result0" value="<?php  echo $res; ?>" style="width:150px"><br/>
         <input type="button" value="7" onClick="put('7')" style="width:30px">
         <input type="button" value="8" onClick="put('8')" style="width:30px">
         <input type="button" value="9" onClick="put('9')" style="width:30px">
