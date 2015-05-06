@@ -1,0 +1,5 @@
+php_login是登入頁面，php_index則是登入後會看到的頁面
+php_sign負責註冊，為了管理上的方便起見，把所有新註冊的名字的權限都設為0(管理員為1)，php_logout負責登出
+anime和game是專題版的頁面，anime_post和game_post則是發文，回覆文章的部分會在專題版的上方
+delete_*.php是管理員用來刪除文章和回應的頁面
+link_db用來連結資料庫
